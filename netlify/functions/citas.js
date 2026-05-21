@@ -1,6 +1,6 @@
 const https = require("https");
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbycxZSkreWvowxpT6xIhw17Ab8_o_0CRGDASNgOvYO0vhl-JBWB8yNjaP4c7PzvxY3b/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwv__Cv9GwUCvEM0RBUxGQlIQLpqXT3ylAC44UeFKXK0JkHTrYaue--KgkaVfOgkkiq/exec";
 
 const headers = {
   "Access-Control-Allow-Origin": "*",
