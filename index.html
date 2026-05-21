@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LimCab - Limpieza Integral</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --cyan:#00C2C7;--cyan-dark:#009BA0;--cyan-light:rgba(0,194,199,0.12);
+    --dark:#0d1117;--darker:#080c10;--card:#131920;
+    --text:#f0f4f8;--muted:#8a9bb0;--border:rgba(0,194,199,0.15);
+    --red:#E24B4A;--green:#1D9E75;
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--text);overflow-x:hidden}
+
+  /* NAV */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:var(--darker);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo-icon{width:38px;height:38px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;color:#000;letter-spacing:1px}
+  .logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--cyan)}
+  .logo-sub{font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:-2px}
+  nav ul{list-style:none;display:flex;gap:2rem}
+  nav ul a{text-decoration:none;color:var(--muted);font-size:14px;transition:color .2s}
+  nav ul a:hover{color:var(--cyan)}
+  .btn-nav{background:var(--cyan);color:#000;padding:8px 20px;border-radius:6px;font-size:14px;font-weight:600;text-decoration:none;transition:background .2s}
+  .btn-nav:hover{background:var(--cyan-dark)}
+
+  /* HERO */
+  .hero{min-height:520px;display:flex;align-items:center;padding:4rem 2rem;position:relative;overflow:hidden;background:radial-gradient(ellipse at 70% 50%,rgba(0,194,199,.08) 0%,transparent 60%)}
+  .hero-content{max-width:560px;z-index:1}
+  .hero-badge{display:inline-block;background:rgba(0,194,199,.15);color:var(--cyan);border:1px solid rgba(0,194,199,.3);padding:4px 14px;border-radius:20px;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.5rem}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:72px;line-height:1;letter-spacing:3px;margin-bottom:1rem}
+  .hero h1 span{color:var(--cyan)}
+  .hero p{font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:2rem;max-width:440px}
+  .hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+  .btn-primary{background:var(--cyan);color:#000;padding:12px 28px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none;transition:all .2s;cursor:pointer;border:none;display:inline-block}
+  .btn-primary:hover{background:var(--cyan-dark);transform:translateY(-1px)}
+  .btn-outline{background:transparent;color:var(--cyan);padding:12px 28px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid var(--cyan);transition:all .2s;cursor:pointer}
+  .btn-outline:hover{background:rgba(0,194,199,.08)}
+  .hero-graphic{position:absolute;right:-40px;top:50%;transform:translateY(-50%);width:420px;height:420px;border-radius:50%;border:1px solid rgba(0,194,199,.1);display:flex;align-items:center;justify-content:center}
+  .hero-graphic::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(0,194,199,.15)}
+  .hero-graphic::after{content:'✦';font-size:80px;color:rgba(0,194,199,.05)}
+
+  /* STATS */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .stat{background:var(--darker);padding:1.5rem 2rem;text-align:center}
+  .stat-num{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--cyan);letter-spacing:2px}
+  .stat-label{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+
+  /* SERVICES */
+  .section{padding:4rem 2rem}
+  .section-header{text-align:center;margin-bottom:3rem}
+  .section-tag{display:inline-block;color:var(--cyan);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:.5rem}
+  .section-header h2{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:2px}
+  .section-header p{color:var(--muted);font-size:15px;margin-top:.5rem}
+  .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem}
+  .service-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:all .25s;cursor:default}
+  .service-card:hover{border-color:var(--cyan);transform:translateY(-3px)}
+  .service-icon{width:48px;height:48px;background:rgba(0,194,199,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:1rem}
+  .service-card h3{font-size:16px;font-weight:600;margin-bottom:.4rem}
+  .service-card p{font-size:13px;color:var(--muted);line-height:1.5}
+
+  /* BOOKING */
+  .booking-section{padding:4rem 2rem;background:var(--darker);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .booking-wrapper{display:grid;grid-template-columns:1fr 1.3fr;gap:3rem;max-width:1000px;margin:0 auto;align-items:start}
+  .booking-info h2{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:2px;margin-bottom:1rem}
+  .booking-info h2 span{color:var(--cyan)}
+  .booking-info p{color:var(--muted);font-size:15px;line-height:1.7;margin-bottom:1.5rem}
+  .booking-steps{display:flex;flex-direction:column;gap:1rem}
+  .step{display:flex;align-items:flex-start;gap:12px}
+  .step-num{width:28px;height:28px;background:var(--cyan);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+  .step-text h4{font-size:14px;font-weight:600;margin-bottom:2px}
+  .step-text p{font-size:13px;color:var(--muted)}
+
+  /* FORM CARD */
+  .booking-form{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem}
+  .form-row{margin-bottom:1.2rem}
+  .form-row label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:500}
+  .form-row input,.form-row select{width:100%;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;transition:border-color .2s;appearance:none}
+  .form-row input:focus,.form-row select:focus{outline:none;border-color:var(--cyan)}
+  .form-row select option{background:var(--dark)}
+
+  /* CALENDARIO */
+  .calendar-wrap{margin-bottom:1.2rem}
+  .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .cal-header h3{font-size:15px;font-weight:600}
+  .cal-nav{background:transparent;border:1px solid var(--border);color:var(--text);width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+  .cal-nav:hover{border-color:var(--cyan);color:var(--cyan)}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .cal-day-name{text-align:center;font-size:11px;color:var(--muted);padding:4px 0;text-transform:uppercase;letter-spacing:1px}
+  .cal-day{text-align:center;padding:6px 4px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid transparent;transition:all .15s;min-height:32px;display:flex;align-items:center;justify-content:center}
+  .cal-day.empty{cursor:default}
+  .cal-day.past{color:rgba(255,255,255,.2);cursor:not-allowed}
+  .cal-day.domingo{color:rgba(255,255,255,.25);cursor:not-allowed;font-size:12px}
+  .cal-day.available{color:var(--text)}
+  .cal-day.available:hover{background:rgba(0,194,199,.15);border-color:var(--cyan);color:var(--cyan)}
+  .cal-day.selected{background:var(--cyan);color:#000;font-weight:600}
+  .cal-day.partial{background:rgba(239,159,39,.1);border-color:rgba(239,159,39,.3);color:#EF9F27}
+  .cal-day.full{background:rgba(226,75,74,.08);color:rgba(226,75,74,.5);cursor:not-allowed;border-color:rgba(226,75,74,.15)}
+
+  /* LEYENDA */
+  .cal-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+  .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+  .legend-dot{width:8px;height:8px;border-radius:50%}
+
+  /* HORARIOS */
+  .horarios-wrap{margin-bottom:1.2rem}
+  .horarios-label{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:8px}
+  .horarios-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .horario-btn{padding:8px 4px;border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;border:1px solid var(--border);background:var(--dark);color:var(--text);transition:all .15s;text-align:center}
+  .horario-btn:hover:not(.ocupado){border-color:var(--cyan);color:var(--cyan);background:rgba(0,194,199,.08)}
+  .horario-btn.seleccionado{background:var(--cyan);color:#000;border-color:var(--cyan);font-weight:600}
+  .horario-btn.ocupado{background:rgba(226,75,74,.06);color:rgba(226,75,74,.4);border-color:rgba(226,75,74,.15);cursor:not-allowed;text-decoration:line-through}
+
+  /* SUBMIT */
+  .btn-submit{width:100%;padding:13px;font-size:15px;font-weight:600;cursor:pointer;margin-top:.5rem;border-radius:8px}
+  .btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+  /* MENSAJE */
+  .msg{margin-top:1rem;padding:12px 16px;border-radius:8px;font-size:13px;text-align:center;display:none;line-height:1.5}
+  .msg.ok{background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.3);color:#1D9E75;display:block}
+  .msg.err{background:rgba(226,75,74,.1);border:1px solid rgba(226,75,74,.3);color:var(--red);display:block}
+  .msg.loading{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--muted);display:block}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;max-width:900px;margin:0 auto}
+  .about-years{font-family:'Bebas Neue',sans-serif;font-size:120px;color:rgba(0,194,199,.08);line-height:1;letter-spacing:4px;text-align:center;position:relative;height:200px;display:flex;align-items:center;justify-content:center}
+  .about-years span{position:absolute;font-size:18px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;white-space:nowrap;font-family:'DM Sans',sans-serif}
+  .about-text h2{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:2px;margin-bottom:1rem}
+  .about-text p{color:var(--muted);font-size:15px;line-height:1.7;margin-bottom:1rem}
+  .about-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.5rem}
+  .tag{background:rgba(0,194,199,.08);border:1px solid rgba(0,194,199,.2);color:var(--cyan);padding:5px 14px;border-radius:20px;font-size:12px}
+
+  /* FOOTER */
+  footer{padding:2rem;background:var(--darker);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+  footer p{font-size:13px;color:var(--muted)}
+  footer a{color:var(--cyan);text-decoration:none;font-size:13px}
+
+  @media(max-width:700px){
+    .hero h1{font-size:48px}
+    .booking-wrapper,.about-grid{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr}
+    nav ul{display:none}
+    .hero-graphic{display:none}
+    .horarios-grid{grid-template-columns:repeat(3,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">LC</div>
+    <div>
+      <div class="logo-text">LimCab</div>
+      <div class="logo-sub">Limpieza Integral</div>
+    </div>
+  </div>
+  <ul>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#cita">Agendar</a></li>
+  </ul>
+  <a href="#cita" class="btn-nav">Agendar cita</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">✦ Servicio a domicilio · Culiacán</div>
+    <h1>Limpieza<br><span>Profunda</span><br>a Tu Puerta</h1>
+    <p>Limpieza especializada de salas, sillones, colchones, alfombras y más. Resultados profesionales, sin que te muevas de casa.</p>
+    <div class="hero-btns">
+      <a href="#cita" class="btn-primary">Agendar ahora</a>
+      <a href="#servicios" class="btn-outline">Ver servicios</a>
+    </div>
+  </div>
+  <div class="hero-graphic"></div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">9+</div><div class="stat-label">Años de experiencia</div></div>
+  <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Clientes satisfechos</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Servicio garantizado</div></div>
+</div>
+
+<section class="section" id="servicios">
+  <div class="section-header">
+    <div class="section-tag">Lo que hacemos</div>
+    <h2>Nuestros Servicios</h2>
+    <p>Limpieza profesional para cada rincón de tu hogar</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card"><div class="service-icon">🛋️</div><h3>Salas</h3><p>Limpieza profunda de sofás y sillones, eliminando polvo, ácaros y manchas.</p></div>
+    <div class="service-card"><div class="service-icon">🪑</div><h3>Sillas</h3><p>Lavado y sanitizado de sillas tapizadas de tela o cuero.</p></div>
+    <div class="service-card"><div class="service-icon">🛏️</div><h3>Colchones</h3><p>Extracción de ácaros y manchas para un descanso más limpio y saludable.</p></div>
+    <div class="service-card"><div class="service-icon">🟫</div><h3>Tapetes</h3><p>Lavado a fondo de tapetes y alfombras sin importar el tamaño.</p></div>
+    <div class="service-card"><div class="service-icon">🚗</div><h3>Automóviles</h3><p>Lavado exterior, interior y sanitizado de ductos de aire.</p></div>
+    <div class="service-card"><div class="service-icon">🧸</div><h3>Peluches</h3><p>Limpieza cuidadosa para peluches y artículos de bebés.</p></div>
+  </div>
+</section>
+
+<section class="booking-section" id="cita">
+  <div style="text-align:center;margin-bottom:2.5rem">
+    <div class="section-tag">Sin complicaciones</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:2px">Agenda tu <span style="color:var(--cyan)">Cita</span></h2>
+    <p style="color:var(--muted);font-size:15px;margin-top:.5rem">Elige fecha y horario — te mostramos la disponibilidad en tiempo real</p>
+  </div>
+
+  <div class="booking-wrapper">
+    <div class="booking-info">
+      <div class="booking-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><h4>Llena tus datos</h4><p>Nombre, teléfono y servicio que necesitas</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><h4>Elige en el calendario</h4><p>Los días en naranja tienen pocos lugares, los rojos están llenos</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><h4>Selecciona tu horario</h4><p>Los horarios tachados ya están ocupados</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><h4>Confirma tu cita</h4><p>Te contactamos por WhatsApp para confirmar</p></div>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:.8rem;font-weight:500">Leyenda del calendario</p>
+        <div class="cal-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div> Día seleccionado</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div> Pocos lugares</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--red);opacity:.5"></div> Día lleno</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--muted);opacity:.4"></div> No disponible</div>
+        </div>
+        <div class="cal-legend" style="margin-top:8px">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div> Horario libre</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--red);opacity:.5"></div> Horario ocupado</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="booking-form">
+      <div class="form-row">
+        <label>Nombre completo</label>
+        <input type="text" id="nombre" placeholder="Ej. María González">
+      </div>
+      <div class="form-row">
+        <label>Teléfono (WhatsApp)</label>
+        <input type="tel" id="telefono" placeholder="667 000 0000">
+      </div>
+      <div class="form-row">
+        <label>Servicio</label>
+        <select id="servicio">
+          <option value="">Selecciona un servicio</option>
+          <option>Limpieza de sala / sillones</option>
+          <option>Limpieza de colchón</option>
+          <option>Limpieza de sillas</option>
+          <option>Limpieza de tapete / alfombra</option>
+          <option>Lavado de automóvil</option>
+          <option>Limpieza de peluches</option>
+        </select>
+      </div>
+
+      <!-- CALENDARIO -->
+      <div class="calendar-wrap">
+        <label style="display:block;font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:500">Fecha deseada</label>
+        <div style="background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:12px">
+          <div class="cal-header">
+            <button class="cal-nav" id="prevMes" onclick="cambiarMes(-1)">‹</button>
+            <h3 id="calTitulo"></h3>
+            <button class="cal-nav" id="nextMes" onclick="cambiarMes(1)">›</button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+        <input type="hidden" id="fechaSeleccionada">
+      </div>
+
+      <!-- HORARIOS -->
+      <div class="horarios-wrap" id="horariosWrap" style="display:none">
+        <div class="horarios-label">Horario disponible para <span id="fechaLabel" style="color:var(--cyan)"></span></div>
+        <div class="horarios-grid" id="horariosGrid"></div>
+        <input type="hidden" id="horarioSeleccionado">
+      </div>
+
+      <button class="btn-primary btn-submit" id="btnEnviar" onclick="agendarCita()">Confirmar cita</button>
+      <div class="msg" id="msgBox"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="nosotros">
+  <div class="about-grid">
+    <div class="about-years">9<span>años de servicio</span></div>
+    <div class="about-text">
+      <h2>¿Quiénes Somos?</h2>
+      <p>Somos LimCab Limpieza Integral, un negocio familiar con más de 9 años sirviendo a las familias de Culiacán, Sinaloa. Nos especializamos en la limpieza profunda de muebles, alfombras y más, siempre con productos seguros para toda la familia.</p>
+      <p>Trabajamos a domicilio en zona norte de Culiacán para que no tengas que salir de casa.</p>
+      <div class="about-tags">
+        <span class="tag">Servicio a domicilio</span>
+        <span class="tag">Productos seguros</span>
+        <span class="tag">9+ años de experiencia</span>
+        <span class="tag">Zona norte Culiacán</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 LimCab Limpieza Integral · Culiacán, Sinaloa</p>
+  <a href="https://wa.me/526674984808">WhatsApp: 667 498 4808</a>
+</footer>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbycxZSkreWvowxpT6xIhw17Ab8_o_0CRGDASNgOvYO0vhl-JBWB8yNjaP4c7PzvxY3b/exec";
+const HORARIOS   = ["9:00 AM","10:00 AM","11:00 AM","12:00 PM","1:00 PM","3:00 PM","4:00 PM","5:00 PM"];
+const TOTAL_CITAS_DIA = HORARIOS.length; // 8 horarios por día
+
+let citasOcupadas = []; // { fecha, horario }
+let mesActual = new Date().getMonth();
+let anioActual = new Date().getFullYear();
+let fechaElegida = null;
+let horarioElegido = null;
+
+// ── Carga inicial de citas desde el Sheet ──────────────────
+async function cargarCitas() {
+  try {
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
+    citasOcupadas = data.ocupados || [];
+  } catch(e) {
+    citasOcupadas = [];
+  }
+  renderCalendario();
+}
+
+// ── Cuántas citas hay en un día específico ─────────────────
+function citasEnDia(fechaStr) {
+  return citasOcupadas.filter(c => c.fecha === fechaStr).length;
+}
+
+// ── Renderizar el calendario ───────────────────────────────
+function renderCalendario() {
+  const hoy   = new Date();
+  hoy.setHours(0,0,0,0);
+  const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+  document.getElementById("calTitulo").textContent = meses[mesActual] + " " + anioActual;
+
+  const grid = document.getElementById("calGrid");
+  grid.innerHTML = "";
+
+  // Nombres de días
+  ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"].forEach(d => {
+    const el = document.createElement("div");
+    el.className = "cal-day-name";
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const primerDia = new Date(anioActual, mesActual, 1).getDay();
+  const diasEnMes = new Date(anioActual, mesActual + 1, 0).getDate();
+
+  // Espacios vacíos al inicio
+  for(let i = 0; i < primerDia; i++) {
+    const el = document.createElement("div");
+    el.className = "cal-day empty";
+    grid.appendChild(el);
+  }
+
+  for(let dia = 1; dia <= diasEnMes; dia++) {
+    const fecha = new Date(anioActual, mesActual, dia);
+    fecha.setHours(0,0,0,0);
+    const fechaStr = `${anioActual}-${String(mesActual+1).padStart(2,"0")}-${String(dia).padStart(2,"0")}`;
+    const esDomingo = fecha.getDay() === 0;
+    const esPasado  = fecha < hoy;
+    const ocupadas  = citasEnDia(fechaStr);
+
+    const el = document.createElement("div");
+    el.textContent = dia;
+
+    if(esPasado) {
+      el.className = "cal-day past";
+    } else if(esDomingo) {
+      el.className = "cal-day domingo";
+      el.title = "Cerrado domingos";
+    } else if(ocupadas >= TOTAL_CITAS_DIA) {
+      el.className = "cal-day full";
+      el.title = "Día lleno";
+    } else if(ocupadas >= Math.floor(TOTAL_CITAS_DIA * 0.5)) {
+      // Más de la mitad ocupada → naranja
+      el.className = "cal-day partial available";
+      el.title = `${TOTAL_CITAS_DIA - ocupadas} lugares disponibles`;
+      el.onclick = () => seleccionarFecha(fechaStr, el);
+    } else {
+      el.className = "cal-day available";
+      el.onclick = () => seleccionarFecha(fechaStr, el);
+    }
+
+    if(fechaElegida === fechaStr && !esPasado && !esDomingo) {
+      el.classList.add("selected");
+    }
+
+    grid.appendChild(el);
+  }
+}
+
+// ── Seleccionar un día en el calendario ───────────────────
+function seleccionarFecha(fechaStr, el) {
+  fechaElegida = fechaStr;
+  horarioElegido = null;
+  document.getElementById("fechaSeleccionada").value = fechaStr;
+  document.getElementById("horarioSeleccionado").value = "";
+
+  // Resaltar día seleccionado
+  document.querySelectorAll(".cal-day").forEach(d => d.classList.remove("selected"));
+  el.classList.add("selected");
+
+  // Mostrar horarios
+  renderHorarios(fechaStr);
+}
+
+// ── Renderizar los botones de horario ─────────────────────
+function renderHorarios(fechaStr) {
+  const wrap  = document.getElementById("horariosWrap");
+  const grid  = document.getElementById("horariosGrid");
+  const label = document.getElementById("fechaLabel");
+
+  // Formatear fecha legible
+  const [y,m,d] = fechaStr.split("-");
+  const meses = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  label.textContent = `${parseInt(d)} de ${meses[parseInt(m)-1]}`;
+
+  const ocupadosHoy = citasOcupadas
+    .filter(c => c.fecha === fechaStr)
+    .map(c => c.horario);
+
+  grid.innerHTML = "";
+  HORARIOS.forEach(h => {
+    const btn = document.createElement("button");
+    btn.textContent = h;
+    btn.className = ocupadosHoy.includes(h) ? "horario-btn ocupado" : "horario-btn";
+    btn.disabled = ocupadosHoy.includes(h);
+
+    if(!btn.disabled) {
+      btn.onclick = () => {
+        document.querySelectorAll(".horario-btn").forEach(b => b.classList.remove("seleccionado"));
+        btn.classList.add("seleccionado");
+        horarioElegido = h;
+        document.getElementById("horarioSeleccionado").value = h;
+      };
+    }
+
+    grid.appendChild(btn);
+  });
+
+  wrap.style.display = "block";
+}
+
+// ── Cambiar mes ───────────────────────────────────────────
+function cambiarMes(dir) {
+  mesActual += dir;
+  if(mesActual > 11) { mesActual = 0; anioActual++; }
+  if(mesActual < 0)  { mesActual = 11; anioActual--; }
+  renderCalendario();
+}
+
+// ── Enviar la cita ────────────────────────────────────────
+async function agendarCita() {
+  const nombre   = document.getElementById("nombre").value.trim();
+  const telefono = document.getElementById("telefono").value.trim();
+  const servicio = document.getElementById("servicio").value;
+  const fecha    = document.getElementById("fechaSeleccionada").value;
+  const horario  = document.getElementById("horarioSeleccionado").value;
+  const msg      = document.getElementById("msgBox");
+  const btn      = document.getElementById("btnEnviar");
+
+  if(!nombre || !telefono || !servicio || !fecha || !horario) {
+    msg.className = "msg err";
+    msg.textContent = "⚠️ Por favor completa todos los campos y selecciona fecha y horario.";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Enviando...";
+  msg.className = "msg loading";
+  msg.textContent = "⏳ Verificando disponibilidad...";
+
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nombre, telefono, servicio, fecha, horario })
+    });
+
+    // Guardamos localmente para actualizar la UI sin recargar
+    citasOcupadas.push({ fecha, horario });
+    renderCalendario();
+    renderHorarios(fecha);
+
+    msg.className = "msg ok";
+    msg.innerHTML = `✅ ¡Cita solicitada, ${nombre}!<br>Te contactaremos al ${telefono} por WhatsApp para confirmar.`;
+    btn.textContent = "Cita enviada ✓";
+
+    setTimeout(() => {
+      document.getElementById("nombre").value = "";
+      document.getElementById("telefono").value = "";
+      document.getElementById("servicio").value = "";
+      document.getElementById("fechaSeleccionada").value = "";
+      document.getElementById("horarioSeleccionado").value = "";
+      fechaElegida = null;
+      horarioElegido = null;
+      btn.disabled = false;
+      btn.textContent = "Confirmar cita";
+      msg.className = "msg";
+      renderCalendario();
+    }, 4000);
+
+  } catch(err) {
+    msg.className = "msg err";
+    msg.textContent = "❌ Hubo un error. Inténtalo de nuevo o contáctanos por WhatsApp.";
+    btn.disabled = false;
+    btn.textContent = "Confirmar cita";
+  }
+}
+
+// Iniciar
+cargarCitas();
+</script>
+</body>
+</html>
