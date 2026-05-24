@@ -2,6 +2,11 @@ const https = require("https");
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwv__Cv9GwUCvEM0RBUxGQlIQLpqXT3ylAC44UeFKXK0JkHTrYaue--KgkaVfOgkkiq/exec";
 
+const headers = {
+  "Access-Control-Allow-Origin": "*",
+  "Content-Type": "application/json"
+};
+
 function hacerPeticion(url, method, cuerpo) {
   return new Promise((resolve, reject) => {
     const urlObj = new URL(url);
@@ -17,40 +22,52 @@ function hacerPeticion(url, method, cuerpo) {
 
     const req = https.request(config, (res) => {
       if (res.statusCode === 301 || res.statusCode === 302) {
-        return hacerPeticion(res.headers.location, method, cuerpo)
+        const nuevaUrl = res.headers.location;
+        console.log("Redirigiendo a:", nuevaUrl);
+        return hacerPeticion(nuevaUrl, method, cuerpo)
           .then(resolve).catch(reject);
       }
+
       let data = "";
       res.on("data", chunk => data += chunk);
       res.on("end", () => {
+        console.log("Respuesta de Google:", data);
         try { resolve(JSON.parse(data)); }
         catch(e) { resolve({ raw: data }); }
       });
     });
 
-    req.on("error", reject);
+    req.on("error", (err) => {
+      console.log("Error en peticion:", err.message);
+      reject(err);
+    });
+
     if (cuerpo) req.write(cuerpo);
     req.end();
   });
 }
 
-module.exports = async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Content-Type", "application/json");
+exports.handler = async (event) => {
+  console.log("Metodo:", event.httpMethod);
+  console.log("Body recibido:", event.body);
 
   try {
-    if (req.method === "GET") {
+    if (event.httpMethod === "GET") {
       const data = await hacerPeticion(SCRIPT_URL, "GET", null);
-      return res.status(200).json(data);
+      return { statusCode: 200, headers, body: JSON.stringify(data) };
     }
 
-    if (req.method === "POST") {
-      const body = JSON.stringify(req.body);
-      const data = await hacerPeticion(SCRIPT_URL, "POST", body);
-      return res.status(200).json(data);
+    if (event.httpMethod === "POST") {
+      const data = await hacerPeticion(SCRIPT_URL, "POST", event.body);
+      return { statusCode: 200, headers, body: JSON.stringify(data) };
     }
 
   } catch (err) {
-    return res.status(500).json({ ok: false, msg: err.message });
+    console.log("Error general:", err.message);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ ok: false, msg: err.message })
+    };
   }
 };
