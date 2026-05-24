@@ -45,8 +45,13 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === "POST") {
-      const body = JSON.stringify(req.body);
-      const data = await hacerPeticion(SCRIPT_URL, "POST", body);
+      // Vercel a veces manda el body como string, a veces como objeto
+      // Este bloque maneja los dos casos
+      const bodyStr = typeof req.body === "string"
+        ? req.body
+        : JSON.stringify(req.body);
+
+      const data = await hacerPeticion(SCRIPT_URL, "POST", bodyStr);
       return res.status(200).json(data);
     }
 
