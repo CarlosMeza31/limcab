@@ -1,6 +1,6 @@
 const https = require("https");
 
-const SCRIPT_URL = "TU_URL_DE_APPS_SCRIPT_AQUI";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwv__Cv9GwUCvEM0RBUxGQlIQLpqXT3ylAC44UeFKXK0JkHTrYaue--KgkaVfOgkkiq/exec";
 
 function hacerPeticion(url, method, cuerpo) {
   return new Promise((resolve, reject) => {
